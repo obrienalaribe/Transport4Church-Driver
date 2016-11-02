@@ -1,0 +1,31 @@
+PODS:
+  - Bolts/Tasks (1.8.4)
+  - BRYXBanner (0.7.1)
+  - Eureka (2.0.0-beta.1)
+  - ImageRow (1.0.0):
+    - Eureka (~> 2.0.0-beta.1)
+  - MGSwipeTableCell (1.5.5)
+  - Parse (1.14.2):
+    - Bolts/Tasks (~> 1.8)
+  - Socket.IO-Client-Swift (8.0.2)
+
+DEPENDENCIES:
+  - BRYXBanner
+  - Eureka (~> 2.0.0-beta.1)
+  - ImageRow (~> 1.0)
+  - MGSwipeTableCell
+  - Parse
+  - Socket.IO-Client-Swift (~> 8.0.2)
+
+SPEC CHECKSUMS:
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  BRYXBanner: 34eabf9c6c009f187948ca78a4f3bba3767d0f04
+  Eureka: d014adf16406745e1a78d5790ea37ed130a0a8e5
+  ImageRow: 1e37db26f61a0c4ad3bc9a3a803c32d968782857
+  MGSwipeTableCell: bafeb5f351124544c9364ecbdf24c7b06a37d340
+  Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
+  Socket.IO-Client-Swift: 136598e4a81a42b0e6855e7f94a0e5a6efdc5ff8
+
+PODFILE CHECKSUM: db9749561c0ab5330f8b07a377b9a67a2203aea5
+
+COCOAPODS: 1.2.0.beta.1
