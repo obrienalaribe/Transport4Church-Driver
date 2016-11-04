@@ -17,7 +17,9 @@ class ParseServer {
     }
     
     func registerSubClasses(){
-       Route.registerSubclass()
+        Rider.registerSubclass()
+        Trip.registerSubclass()
+        Route.registerSubclass()
         Church.registerSubclass()
         
     }
@@ -35,11 +37,11 @@ class ParseServer {
         
         Parse.initialize(with: parseConfiguration)
         
-        let churchRepo = ChurchRepo()
-        churchRepo.fetchNearbyChurches()
-        //        PFUser.logOut()
+    
+//                PFUser.logOut()
     }
     
+
     func initializeChurches(){
         let churchNames = ["EFA RCCG Leeds", "Power Connections Leeds", "Leeds Chinese Church"]
         

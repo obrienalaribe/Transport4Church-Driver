@@ -19,11 +19,13 @@ struct Credentials {
 
 struct Profile {
     var image : UIImage?
-    var name: String
+    var firstname: String
+    var surname: String
     var gender: String
     var contact : String
-    var church : String
+    var church : Church
 }
+
 
 let appLaunchCount = "count"
 
@@ -57,10 +59,11 @@ class UserRepo {
                 }
             }
             
-            currentUser["name"] = profile.name
+            currentUser["firstname"] = profile.firstname
+            currentUser["surname"] = profile.surname
             currentUser["gender"] = profile.gender
             currentUser["contact"] = profile.contact
-            currentUser["church"] = profile.church
+            currentUser["Church"] = profile.church
             
             currentUser.saveInBackground(block: { (success, error) in
                 
@@ -115,7 +118,7 @@ class UserRepo {
                 print("saved new user")
                 
                 print(PFUser.current()!)
-                listener.navigationController?.setViewControllers([RoutesViewController()], animated: true)
+                listener.navigationController?.setViewControllers([EditProfileViewController()], animated: true)
                 
             }
             

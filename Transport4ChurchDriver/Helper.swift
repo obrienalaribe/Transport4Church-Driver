@@ -20,28 +20,6 @@ import BRYXBanner
 
 class Helper {
     
-    static func validateFormInputs(_ valuesDictionary: Dictionary<String, Any?>) -> [String]{
-        var emptyFields = [String]()
-        for key in valuesDictionary.keys {
-            if let field = unwrap(valuesDictionary[key]) {
-                if unwrap(field)!.isEmpty {
-                    emptyFields.append(key)
-                    print("\(key) is empty \(unwrap(field)!.isEmpty)")
-                }
-            }
-        }
-        
-        return emptyFields
-    }
-    
-    static func unwrap(_ value: Any?) -> String? {
-        if let result = value {
-            return result as? String
-        }
-        return nil
-    }
-    
-    
     static func convertDateToString(_ date : Date) -> String{
         // format the NSDate to a NSString
         let dateFormat = DateFormatter()
@@ -49,8 +27,6 @@ class Helper {
         let dateString = dateFormat.string(from: date)
         return dateString
     }
-    
-    
     
     static func convertStringToDate (_ date : String) -> Date{
         // format the NSDate to a NSString
@@ -101,5 +77,11 @@ class Helper {
         banner.show(duration: 3.0)
     }
     
-    
+    static func showInfoMessage(title: String?, subtitle: String?){
+        let banner = Banner(title: title, subtitle: subtitle, image: UIImage(named: "info"), backgroundColor: UIColor.white)
+        banner.textColor = UIColor(red:0.00, green:0.41, blue:1.00, alpha:1.0)
+        banner.dismissesOnTap = true
+        banner.show(duration: 3.0)
+    }
+
 }

@@ -42,16 +42,17 @@ class EditRouteViewController: FormViewController {
     func handleFormSubmission(_ sender: UIButton!){
         let valuesDictionary = form.values()
         
-        print(valuesDictionary["Route"])
+        print(ChurchRepo.getCurrentUserChurch() )
         
         let route = Route()
         
-        if let routeName = valuesDictionary["Route"] as? String {
+        if let routeName = valuesDictionary["Route"] as? String, let church = ChurchRepo.getCurrentUserChurch() {
             route.name = routeName
+            route.church = church
             
             route.saveInBackground(block: { (success, error) in
                 self.navigationController?.popViewController(animated: true)
-                Helper.showSuccessMessage(title: "Success", subtitle: "\(routeName) was created successfully")
+                Helper.showSuccessMessage(title: "Success", subtitle: "Route \(routeName) was created successfully")
             })
         }
         

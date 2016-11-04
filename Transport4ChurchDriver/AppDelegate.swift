@@ -9,23 +9,29 @@
 import UIKit
 import CoreData
 import Parse
+import GooglePlaces
+import GoogleMaps
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let googleMapsApiKey = "AIzaSyCRbgOlz9moQ-Hlp65-piLroeMtfpNouck"
 
-
+    let parseServer = ParseServer()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
+       
+        GMSServices.provideAPIKey(googleMapsApiKey)
+        GMSPlacesClient.provideAPIKey(googleMapsApiKey)
         
-        
-        let parseServer = ParseServer()
 
         if let loggedInUser = PFUser.current(){
+            print(loggedInUser)
             window?.rootViewController = UINavigationController(rootViewController: RoutesViewController())
             
         }else{
@@ -35,9 +41,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         
-//        window?.rootViewController = UINavigationController(rootViewController:EditProfileViewController())
+//        window?.rootViewController = UINavigationController(rootViewController:RoutesViewController())
 
-        
+//        window?.rootViewController = UINavigationController(rootViewController:DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout()))
+
         return true
     }
 
@@ -54,7 +61,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-       
+        _ = ChurchRepo().fetchNearbyChurchesIfNeeded()
+
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

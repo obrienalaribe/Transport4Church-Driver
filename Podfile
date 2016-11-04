@@ -11,6 +11,9 @@ target 'Transport4ChurchDriver' do
   pod 'Parse'
   pod 'Socket.IO-Client-Swift', '~> 8.0.2'
   pod 'BRYXBanner'
+  pod 'GoogleMaps'
+  pod 'GooglePlaces'
+
   # Pods for Transport4ChurchDriver
 
 end

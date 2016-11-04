@@ -14,7 +14,8 @@ class Church : PFObject, PFSubclassing  {
     }()
     
     @NSManaged var name : String?
-    
+    @NSManaged var location : PFGeoPoint?
+
     override init(){
         super.init()
     }

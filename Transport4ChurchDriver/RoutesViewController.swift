@@ -9,14 +9,15 @@
 import UIKit
 import MGSwipeTableCell
 
-class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate {
-    var objects = [Any]()
+class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, ChurchRepoDelegate {
+    var routes = [Route]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Bus Routes"
         self.tableView.separatorStyle = .singleLine
+        
         
         view.backgroundColor = UIColor(white: 0.95, alpha: 1)
         tableView.backgroundColor = UIColor(white: 0.95, alpha: 1)
@@ -38,11 +39,37 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate {
         
         addBtn.tintColor = UIColor.black
         navigationItem.rightBarButtonItem = addBtn
+        
+        let menuBtn = UIBarButtonItem(image: UIImage(named: "menu"), style: .plain, target: self, action: #selector(RoutesViewController.showMenu))
+        menuBtn.tintColor = UIColor.black
+        
+        navigationItem.leftBarButtonItem = menuBtn
+
+       
+    }
+    
+    
+    func showMenu(){
+        let menuNavCtrl = UINavigationController(rootViewController:MenuViewController())
+        navigationController?.present(menuNavCtrl, animated: true, completion: nil)
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let churchRepo = ChurchRepo()
+        churchRepo.delegate = self
+        
+        if let driversChurch = ChurchRepo.getCurrentUserChurch() {
+            churchRepo.fetchAllRoutes(for: driversChurch)
+        }
+
     }
     
     override  // return the number of cells each section.
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count;
+        return routes.count;
     }
     
 
@@ -50,9 +77,9 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate {
     
 
     func addNewRoute(){
-        objects.insert("hello", at: 0)
-        let indexPath = IndexPath(row: 0, section: 0)
-        self.tableView.insertRows(at: [indexPath], with: .automatic)
+//        routes.insert("test", at: 0)
+//        let indexPath = IndexPath(row: 0, section: 0)
+//        self.tableView.insertRows(at: [indexPath], with: .automatic)
 
         let viewController = EditRouteViewController()
         viewController.action = "New Route"
@@ -67,7 +94,7 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate {
         var cell = MGSwipeTableCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "Cell")
         cell.delegate = self;
 
-        cell.textLabel?.text = "hello"
+        cell.textLabel?.text = routes[indexPath.row].name
         cell.imageView?.layer.cornerRadius = 40
         cell.imageView?.layer.masksToBounds = true
         cell.imageView?.backgroundColor = UIColor(white: 0.95, alpha: 1)
@@ -94,6 +121,26 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60;
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        let requestViewController = DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout())
+        
+        requestViewController.route = routes[indexPath.row]
+        
+        self.navigationController?.pushViewController(requestViewController, animated: true)
+    }
+    
+    func didFinishFetchingRoutes(routes: [Route]){
+        // The number of routes has been updated
+        
+        print("self.routes.count != routes.count = \(self.routes.count) \(routes.count )")
+        if self.routes.count != routes.count {
+            self.routes = routes
+            self.tableView.reloadData()
+        }
+        
     }
     
 }

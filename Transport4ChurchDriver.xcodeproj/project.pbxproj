@@ -23,6 +23,21 @@
 		434C2D7E1DCA3C66008ECCD5 /* Church.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434C2D7D1DCA3C66008ECCD5 /* Church.swift */; };
 		434C2D801DCA3CB2008ECCD5 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434C2D7F1DCA3CB2008ECCD5 /* EditProfileViewController.swift */; };
 		434C2D821DCA476B008ECCD5 /* ChurchRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434C2D811DCA476B008ECCD5 /* ChurchRepo.swift */; };
+		43DF82B41DCCA8540048C6C2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82B31DCCA8540048C6C2 /* Constants.swift */; };
+		43DF82B71DCCD5380048C6C2 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82B61DCCD5380048C6C2 /* Trip.swift */; };
+		43DF82B91DCCD5550048C6C2 /* Rider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82B81DCCD5550048C6C2 /* Rider.swift */; };
+		43DF82BB1DCCD5F80048C6C2 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82BA1DCCD5F80048C6C2 /* Address.swift */; };
+		43DF82BD1DCCD6E20048C6C2 /* DriverRequestListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82BC1DCCD6E20048C6C2 /* DriverRequestListController.swift */; };
+		43DF82BF1DCCD79E0048C6C2 /* DriverTripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82BE1DCCD79E0048C6C2 /* DriverTripViewController.swift */; };
+		43DF82C11DCCD7A60048C6C2 /* DriverTripViewDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82C01DCCD7A60048C6C2 /* DriverTripViewDelegates.swift */; };
+		43DF82C31DCCD7AC0048C6C2 /* RiderMapClusterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82C21DCCD7AC0048C6C2 /* RiderMapClusterController.swift */; };
+		43DF82C51DCCD7D00048C6C2 /* CloudFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82C41DCCD7D00048C6C2 /* CloudFunctions.swift */; };
+		43DF82C81DCCDCFD0048C6C2 /* SocketIOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82C71DCCDCFD0048C6C2 /* SocketIOManager.swift */; };
+		43DF82CA1DCCDD640048C6C2 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82C91DCCDD640048C6C2 /* UIViewExtension.swift */; };
+		43DF82CD1DCCDDA40048C6C2 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82CC1DCCDDA40048C6C2 /* MenuViewController.swift */; };
+		43DF82CF1DCCDDA80048C6C2 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82CE1DCCDDA80048C6C2 /* MenuItem.swift */; };
+		43DF82D11DCCDDAB0048C6C2 /* MenuActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82D01DCCDDAB0048C6C2 /* MenuActions.swift */; };
+		43DF82D31DCCDDFE0048C6C2 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DF82D21DCCDDFE0048C6C2 /* ProfileViewController.swift */; };
 		75FDD2D78101BEB4E2694BC0 /* Pods_Transport4ChurchDriver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3DF98827F0DCE2FD2E38ACC /* Pods_Transport4ChurchDriver.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +61,22 @@
 		434C2D7D1DCA3C66008ECCD5 /* Church.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Church.swift; sourceTree = "<group>"; };
 		434C2D7F1DCA3CB2008ECCD5 /* EditProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		434C2D811DCA476B008ECCD5 /* ChurchRepo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChurchRepo.swift; sourceTree = "<group>"; };
+		43DF82B31DCCA8540048C6C2 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		43DF82B61DCCD5380048C6C2 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
+		43DF82B81DCCD5550048C6C2 /* Rider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rider.swift; sourceTree = "<group>"; };
+		43DF82BA1DCCD5F80048C6C2 /* Address.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
+		43DF82BC1DCCD6E20048C6C2 /* DriverRequestListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverRequestListController.swift; sourceTree = "<group>"; };
+		43DF82BE1DCCD79E0048C6C2 /* DriverTripViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverTripViewController.swift; sourceTree = "<group>"; };
+		43DF82C01DCCD7A60048C6C2 /* DriverTripViewDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverTripViewDelegates.swift; sourceTree = "<group>"; };
+		43DF82C21DCCD7AC0048C6C2 /* RiderMapClusterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RiderMapClusterController.swift; sourceTree = "<group>"; };
+		43DF82C41DCCD7D00048C6C2 /* CloudFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudFunctions.swift; sourceTree = "<group>"; };
+		43DF82C61DCCD86F0048C6C2 /* Transport4ChurchDriver-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Transport4ChurchDriver-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		43DF82C71DCCDCFD0048C6C2 /* SocketIOManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOManager.swift; sourceTree = "<group>"; };
+		43DF82C91DCCDD640048C6C2 /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		43DF82CC1DCCDDA40048C6C2 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		43DF82CE1DCCDDA80048C6C2 /* MenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
+		43DF82D01DCCDDAB0048C6C2 /* MenuActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuActions.swift; sourceTree = "<group>"; };
+		43DF82D21DCCDDFE0048C6C2 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		B3DF98827F0DCE2FD2E38ACC /* Pods_Transport4ChurchDriver.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Transport4ChurchDriver.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4C5E88E16B6410F3995A326 /* Pods-Transport4ChurchDriver.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Transport4ChurchDriver.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Transport4ChurchDriver/Pods-Transport4ChurchDriver.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,16 +115,17 @@
 			isa = PBXGroup;
 			children = (
 				434C2D321DC9F06E008ECCD5 /* AppDelegate.swift */,
+				43DF82CB1DCCDD9B0048C6C2 /* Menu */,
+				43DF82B51DCCC1680048C6C2 /* Driver */,
 				434C2D721DCA3338008ECCD5 /* Utils */,
 				434C2D6F1DCA3284008ECCD5 /* Backend */,
 				434C2D6E1DCA3266008ECCD5 /* Models */,
 				434C2D6B1DCA297E008ECCD5 /* User */,
-				434C2D341DC9F06E008ECCD5 /* RoutesViewController.swift */,
 				434C2D3C1DC9F06E008ECCD5 /* Assets.xcassets */,
 				434C2D3E1DC9F06E008ECCD5 /* LaunchScreen.storyboard */,
 				434C2D411DC9F06E008ECCD5 /* Info.plist */,
 				434C2D391DC9F06E008ECCD5 /* Transport4ChurchDriver.xcdatamodeld */,
-				434C2D491DCA035A008ECCD5 /* EditRouteViewController.swift */,
+				43DF82C61DCCD86F0048C6C2 /* Transport4ChurchDriver-Bridging-Header.h */,
 			);
 			path = Transport4ChurchDriver;
 			sourceTree = "<group>";
@@ -102,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				434C2D6C1DCA2993008ECCD5 /* AuthViewController.swift */,
+				43DF82D21DCCDDFE0048C6C2 /* ProfileViewController.swift */,
 				434C2D7F1DCA3CB2008ECCD5 /* EditProfileViewController.swift */,
 			);
 			name = User;
@@ -110,6 +143,9 @@
 		434C2D6E1DCA3266008ECCD5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				43DF82BA1DCCD5F80048C6C2 /* Address.swift */,
+				43DF82B81DCCD5550048C6C2 /* Rider.swift */,
+				43DF82B61DCCD5380048C6C2 /* Trip.swift */,
 				434C2D791DCA367D008ECCD5 /* Route.swift */,
 				434C2D7D1DCA3C66008ECCD5 /* Church.swift */,
 			);
@@ -119,6 +155,7 @@
 		434C2D6F1DCA3284008ECCD5 /* Backend */ = {
 			isa = PBXGroup;
 			children = (
+				43DF82C71DCCDCFD0048C6C2 /* SocketIOManager.swift */,
 				434C2D701DCA32B3008ECCD5 /* UserRepo.swift */,
 				434C2D771DCA356D008ECCD5 /* ParseServer.swift */,
 				434C2D7B1DCA3C1A008ECCD5 /* RouteRepo.swift */,
@@ -130,10 +167,36 @@
 		434C2D721DCA3338008ECCD5 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				43DF82C91DCCDD640048C6C2 /* UIViewExtension.swift */,
+				43DF82B31DCCA8540048C6C2 /* Constants.swift */,
 				434C2D731DCA3343008ECCD5 /* Helper.swift */,
 				434C2D751DCA338E008ECCD5 /* FormButton.swift */,
+				43DF82C41DCCD7D00048C6C2 /* CloudFunctions.swift */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		43DF82B51DCCC1680048C6C2 /* Driver */ = {
+			isa = PBXGroup;
+			children = (
+				434C2D341DC9F06E008ECCD5 /* RoutesViewController.swift */,
+				434C2D491DCA035A008ECCD5 /* EditRouteViewController.swift */,
+				43DF82BC1DCCD6E20048C6C2 /* DriverRequestListController.swift */,
+				43DF82C01DCCD7A60048C6C2 /* DriverTripViewDelegates.swift */,
+				43DF82BE1DCCD79E0048C6C2 /* DriverTripViewController.swift */,
+				43DF82C21DCCD7AC0048C6C2 /* RiderMapClusterController.swift */,
+			);
+			name = Driver;
+			sourceTree = "<group>";
+		};
+		43DF82CB1DCCDD9B0048C6C2 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				43DF82CC1DCCDDA40048C6C2 /* MenuViewController.swift */,
+				43DF82CE1DCCDDA80048C6C2 /* MenuItem.swift */,
+				43DF82D01DCCDDAB0048C6C2 /* MenuActions.swift */,
+			);
+			name = Menu;
 			sourceTree = "<group>";
 		};
 		7A0ADC49F6DAA13286627722 /* Frameworks */ = {
@@ -275,19 +338,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43DF82BB1DCCD5F80048C6C2 /* Address.swift in Sources */,
 				434C2D801DCA3CB2008ECCD5 /* EditProfileViewController.swift in Sources */,
 				434C2D3B1DC9F06E008ECCD5 /* Transport4ChurchDriver.xcdatamodeld in Sources */,
+				43DF82B91DCCD5550048C6C2 /* Rider.swift in Sources */,
+				43DF82C81DCCDCFD0048C6C2 /* SocketIOManager.swift in Sources */,
 				434C2D741DCA3343008ECCD5 /* Helper.swift in Sources */,
 				434C2D4A1DCA035A008ECCD5 /* EditRouteViewController.swift in Sources */,
+				43DF82CD1DCCDDA40048C6C2 /* MenuViewController.swift in Sources */,
+				43DF82C31DCCD7AC0048C6C2 /* RiderMapClusterController.swift in Sources */,
+				43DF82B71DCCD5380048C6C2 /* Trip.swift in Sources */,
 				434C2D7A1DCA367D008ECCD5 /* Route.swift in Sources */,
+				43DF82B41DCCA8540048C6C2 /* Constants.swift in Sources */,
 				434C2D7C1DCA3C1A008ECCD5 /* RouteRepo.swift in Sources */,
+				43DF82D31DCCDDFE0048C6C2 /* ProfileViewController.swift in Sources */,
 				434C2D761DCA338E008ECCD5 /* FormButton.swift in Sources */,
+				43DF82BD1DCCD6E20048C6C2 /* DriverRequestListController.swift in Sources */,
 				434C2D711DCA32B3008ECCD5 /* UserRepo.swift in Sources */,
 				434C2D781DCA356D008ECCD5 /* ParseServer.swift in Sources */,
 				434C2D7E1DCA3C66008ECCD5 /* Church.swift in Sources */,
+				43DF82BF1DCCD79E0048C6C2 /* DriverTripViewController.swift in Sources */,
 				434C2D821DCA476B008ECCD5 /* ChurchRepo.swift in Sources */,
+				43DF82C51DCCD7D00048C6C2 /* CloudFunctions.swift in Sources */,
+				43DF82CA1DCCDD640048C6C2 /* UIViewExtension.swift in Sources */,
+				43DF82D11DCCDDAB0048C6C2 /* MenuActions.swift in Sources */,
 				434C2D6D1DCA2993008ECCD5 /* AuthViewController.swift in Sources */,
 				434C2D351DC9F06E008ECCD5 /* RoutesViewController.swift in Sources */,
+				43DF82CF1DCCDDA80048C6C2 /* MenuItem.swift in Sources */,
+				43DF82C11DCCD7A60048C6C2 /* DriverTripViewDelegates.swift in Sources */,
 				434C2D331DC9F06E008ECCD5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
