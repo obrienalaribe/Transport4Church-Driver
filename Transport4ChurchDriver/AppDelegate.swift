@@ -40,8 +40,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = UINavigationController(rootViewController:AuthViewController())
         }
         
-         
-
+        
+        
 //        window?.rootViewController = UINavigationController(rootViewController:DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout()))
 
         return true

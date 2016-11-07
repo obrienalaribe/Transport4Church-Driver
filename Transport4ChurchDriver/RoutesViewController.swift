@@ -72,15 +72,9 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return routes.count;
     }
-    
 
-    let paths = [IndexPath(row:11, section:0)]
-    
 
     func addNewRoute(){
-//        routes.insert("test", at: 0)
-//        let indexPath = IndexPath(row: 0, section: 0)
-//        self.tableView.insertRows(at: [indexPath], with: .automatic)
 
         let viewController = EditRouteViewController()
         viewController.action = "New Route"
@@ -103,15 +97,24 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         //configure left buttons
 
         cell.leftButtons = [MGSwipeButton(title: " Notify riders", icon: UIImage(named:"notify"), backgroundColor: UIColor(red:0.03, green:0.79, blue:0.49, alpha:1.0), callback: { (cell) -> Bool in
-            print("doing it bitches")
+           self.notifyRiders()
             return true; //autohide
         })]
         
         cell.leftSwipeSettings.transition = MGSwipeTransition.rotate3D
         
 //        configure right buttons
-        cell.rightButtons = [MGSwipeButton(title: "Delete", backgroundColor: UIColor.red)
-            ,MGSwipeButton(title: "Edit",backgroundColor: UIColor.lightGray)]
+        
+      
+        cell.rightButtons = [  MGSwipeButton(title: "Delete", backgroundColor: UIColor.red, callback: { (cell) -> Bool in
+            self.deleteRoute()
+            return true; //autohide
+        })
+        , MGSwipeButton(title: "Edit", backgroundColor: UIColor.lightGray, callback: { (cell) -> Bool in
+            self.editRoute()
+            return true; //autohide
+        })
+        ]
         cell.rightSwipeSettings.transition = MGSwipeTransition.rotate3D
 //
         
@@ -140,6 +143,20 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
             self.tableView.reloadData()
         }
         
+    }
+    
+    // MARK: Cell Actions
+    
+    func notifyRiders(){
+         self.navigationController?.pushViewController(RouteNotificationController(), animated: true)
+    }
+    
+    func deleteRoute(){
+        print("deleting route ...")
+    }
+    
+    func editRoute(){
+        print("edit route")
     }
     
 }
