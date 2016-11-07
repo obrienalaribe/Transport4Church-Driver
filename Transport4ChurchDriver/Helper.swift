@@ -83,5 +83,11 @@ class Helper {
         banner.dismissesOnTap = true
         banner.show(duration: 3.0)
     }
+    
+    static func parsePostcodePrefix(postcodes: [String]) -> [String] {
+        return postcodes.map { (postcode) -> String in
+            return "\(postcode.components(separatedBy: "-")[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))"
+        }
+    }
 
 }

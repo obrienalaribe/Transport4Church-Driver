@@ -35,6 +35,16 @@ extension UIView {
     
 }
 
+extension UIViewController {
+    func removeBackButtonTitle() {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(
+            title: "",
+            style: UIBarButtonItemStyle.plain,
+            target: nil,
+            action: nil)
+    }
+}
+
 extension UILabel {
     func flash() {
         self.alpha = 0.0;
@@ -87,5 +97,10 @@ extension String {
             return self
         }
     }
+    
+    func trim() -> String {
+        return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+    }
 }
+
 

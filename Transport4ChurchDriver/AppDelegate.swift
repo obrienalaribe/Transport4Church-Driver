@@ -40,14 +40,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = UINavigationController(rootViewController:AuthViewController())
         }
         
-        
-//        window?.rootViewController = UINavigationController(rootViewController:RoutesViewController())
+         
 
 //        window?.rootViewController = UINavigationController(rootViewController:DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout()))
 
         return true
     }
 
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let installation = PFInstallation.current()
+        
+        if let deviceInstallation = installation {
+            deviceInstallation.setDeviceTokenFrom(deviceToken)
+            //register user on a channel with their ID
+            if let user = PFUser.current() {
+                deviceInstallation.channels = [user.objectId!]
+            }
+            
+            deviceInstallation.saveInBackground(block: { (success, error) in
+                if error != nil {
+                    print(error)
+                }else{
+                    print("installation done: push notification registered with token \(deviceToken)")
+                }
+            })
+        }
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        if error._code == 3010 {
+            print("Push notifications are not supported in the iOS Simulator.")
+        } else {
+            print("application:didFailToRegisterForRemoteNotificationsWithError: %@", error)
+        }
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+        
+        if application.applicationState == .background {
+            //            PFPush.handle(userInfo)
+        }
+        
+        print("RECEIVED REMOTE NOTIFICATION \(userInfo)")
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         
     }

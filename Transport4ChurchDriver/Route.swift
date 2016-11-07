@@ -15,6 +15,7 @@ class Route : PFObject, PFSubclassing  {
 
     @NSManaged var name : String?
     @NSManaged var church : Church?
+    @NSManaged var postcodes : [String]?
     
     override init(){
         super.init()

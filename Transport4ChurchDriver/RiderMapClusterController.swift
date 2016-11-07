@@ -9,12 +9,25 @@
 import UIKit
 import GoogleMaps
 
+
 class RiderMapClusterController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate {
 
     var mapView : GMSMapView!
     var driverLocation : CLLocation!
+    var route: Route?
+    var riders : [Rider]?
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
+    init(route: Route, riders: [Rider]) {
+        self.route = route
+        self.riders = riders
+        super.init(nibName: nil, bundle: nil)
+        navigationItem.title = self.route!.name
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,7 +39,6 @@ class RiderMapClusterController: UIViewController, GMSMapViewDelegate, CLLocatio
         
         view.addSubview(mapView)
         
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,6 +59,8 @@ class RiderMapClusterController: UIViewController, GMSMapViewDelegate, CLLocatio
             
             mapView.camera = GMSCameraPosition.camera(withLatitude: driverLatitude, longitude: driverLongitude, zoom: 14.0)
             
+            showRequestCluster()
+            
         }else{
             //mock driver location on simulator
             let driverLatitude = EFA_Coord.latitude
@@ -56,41 +70,36 @@ class RiderMapClusterController: UIViewController, GMSMapViewDelegate, CLLocatio
             
             mapView.camera = GMSCameraPosition.camera(withLatitude: driverLatitude, longitude: driverLongitude, zoom: 9.0)
             
-            let mockCoords = [CLLocationCoordinate2DMake(53.79099916072296,-1.552514210343361), CLLocationCoordinate2DMake(53.74539341153303,-1.534240320324898 ), CLLocationCoordinate2DMake(53.78989318758644, -1.549911126494408),
-                CLLocationCoordinate2DMake(53.80620828430762, -1.578214801847935),
-                CLLocationCoordinate2DMake(53.79014472773473, -1.607189700007439),
-                CLLocationCoordinate2DMake(53.80443745419082, -1.578116901218891),
-                CLLocationCoordinate2DMake(53.80362923070406, 1.577232778072357),
-                CLLocationCoordinate2DMake(53.79022771584644, -1.546331718564034),
-                CLLocationCoordinate2DMake(53.80023856143028, -1.563368104398251),
-                CLLocationCoordinate2DMake(53.79723239018069, -1.557342521846294),
-                CLLocationCoordinate2DMake(53.79107125394805, -1.552353948354721),
-                CLLocationCoordinate2DMake(53.80278891519445, -1.576994061470032),
-                CLLocationCoordinate2DMake(51.44382403056893, -0.9470625221729279),
-                CLLocationCoordinate2DMake(53.79774924281458, -1.565506830811501),
-                CLLocationCoordinate2DMake(53.79208193246318, -1.559161394834518),
-                CLLocationCoordinate2DMake(53.76078991691048, -1.532976664602757),
-
-                ]
+            showRequestCluster()
+           
+          
+        }
+    }
+    
+    func showRequestCluster(){
+        
+        var bounds = GMSCoordinateBounds()
+        
+        if let riders = self.riders {
             
-            var bounds = GMSCoordinateBounds()
-
-            for coord in mockCoords {
+            for rider in riders {
                 var marker = GMSMarker()
                 marker.icon = UIImage(named: "user")!.withRenderingMode(.alwaysTemplate)
-                marker.position = coord
+                marker.position = CLLocationCoordinate2DMake(rider.location.latitude, rider.location.longitude)
                 marker.isFlat = true
-                marker.title = "\(coord.latitude)"
-                marker.snippet = "snipp"
+                marker.title = "\(rider.user["firstname"]!) \(rider.user["surname"]!)"
+                marker.snippet = "Location: \(rider.addressDic["street"]!) \(rider.addressDic["postcode"]!)"
                 marker.map = mapView
-
+                
                 bounds = bounds.includingCoordinate(marker.position)
                 
             }
             
-            let update = GMSCameraUpdate.fit(bounds, withPadding: 100)
-            mapView.animate(with: update)
+
         }
+        
+        let update = GMSCameraUpdate.fit(bounds, withPadding: 100)
+        mapView.animate(with: update)
     }
 
 }

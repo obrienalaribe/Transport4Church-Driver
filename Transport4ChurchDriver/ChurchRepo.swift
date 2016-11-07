@@ -38,7 +38,6 @@ class ChurchRepo {
             print("No need to update church cache")
         }
         
-        
     }
     
     func fetchAllRoutes(for driversChurch: Church) {
@@ -55,7 +54,7 @@ class ChurchRepo {
             
             if error == nil {
                 // The find succeeded.
-                print("Successfully refreshed \(objects?.count) object.")
+                print("Successfully fetched \(objects?.count) routes.")
                 
                 for  object in objects! {
                     let route = object as! Route

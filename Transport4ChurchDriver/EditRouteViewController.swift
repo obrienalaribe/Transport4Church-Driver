@@ -19,12 +19,20 @@ class EditRouteViewController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        form +++ Section("")
+        form +++ Section("Enter a name for this route")
             <<< TextRow("Route"){
                 $0.title = "Route name"
                 $0.placeholder = "i.e University entrance"
             }
            
+            +++ Section("Choose all postcodes for this route")
+            <<< MultipleSelectorRow<String>("Postcodes") {
+                $0.title = "Postcodes"
+                $0.selectorTitle = "Choose postcodes for this route"
+                $0.options = RouteRepo.leedsPostcodes
+                $0.value = []   // initially selected
+            }
+            
             +++ Section() { section in
                 section.header = {
                     var header = HeaderFooterView<UIButton>(.callback({
@@ -41,14 +49,20 @@ class EditRouteViewController: FormViewController {
     
     func handleFormSubmission(_ sender: UIButton!){
         let valuesDictionary = form.values()
-        
-        print(ChurchRepo.getCurrentUserChurch() )
+        var postcodePrefix = [String]()
+        if let selectedPostcodes = valuesDictionary["Postcodes"] {
+            postcodePrefix = (Helper.parsePostcodePrefix(postcodes: Array(selectedPostcodes as! Set)))
+            
+        }
         
         let route = Route()
         
         if let routeName = valuesDictionary["Route"] as? String, let church = ChurchRepo.getCurrentUserChurch() {
-            route.name = routeName
+            route.name = routeName.trim()
             route.church = church
+            route.postcodes = postcodePrefix
+            
+            print(postcodePrefix)
             
             route.saveInBackground(block: { (success, error) in
                 self.navigationController?.popViewController(animated: true)

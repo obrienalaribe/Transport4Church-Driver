@@ -44,8 +44,9 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         menuBtn.tintColor = UIColor.black
         
         navigationItem.leftBarButtonItem = menuBtn
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 
-       
     }
     
     
@@ -125,10 +126,8 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        let requestViewController = DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout())
-        
-        requestViewController.route = routes[indexPath.row]
-        
+        let requestViewController = DriverRequestListController(route: routes[indexPath.row])
+            
         self.navigationController?.pushViewController(requestViewController, animated: true)
     }
     

@@ -9,23 +9,36 @@
 import UIKit
 import Parse
 import BRYXBanner
+import CoreLocation
 
 let cellId = "cellId"
 let EFA_Coord = CLLocationCoordinate2DMake(53.804489, -1.578694)
-var pickupRequests : [Trip]?
 
 //TODO: Make all requests come from Parse
 
-class DriverRequestListController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class DriverRequestListController: UICollectionViewController, UICollectionViewDelegateFlowLayout, RouteRepoDelegate {
 
     var routeRepo = RouteRepo()
-    var listenerResult = [Trip]()
-    
-    var route : Route? {
-        didSet {
-            navigationItem.title = route?.name
-        }
+    var route: Route?
+    var pickupRequestsByRoute : [Trip]?
+    var riders = [Rider]()
+
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
+    
+    override init(collectionViewLayout: UICollectionViewLayout) {
+        super.init(collectionViewLayout: collectionViewLayout)
+    }
+    
+    convenience init(route: Route) {
+        self.init(collectionViewLayout: UICollectionViewFlowLayout())
+        self.route = route
+        navigationItem.title = self.route!.name
+        routeRepo.delegate = self
+    }
+
     
     let items = ["New", "Completed", "Cancelled"]
     let status = [TripStatus.REQUESTED, TripStatus.COMPLETED, TripStatus.CANCELLED]
@@ -51,6 +64,7 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         
         // Add this custom Segmented Control to our view
         self.view.addSubview(tripStatusToggle)
+        
 
     }
     
@@ -78,17 +92,27 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         collectionView?.delegate = self
         collectionView?.dataSource = self
         
-        let refreshBtn = UIBarButtonItem(image: UIImage(named: "refresh"), style: .plain, target: self, action: #selector(DriverRequestListController.refresh))
-        refreshBtn.tintColor = UIColor.black
         
-        self.navigationItem.rightBarButtonItem = refreshBtn
+        let mapViewBtn = UIBarButtonItem(image: UIImage(named: "rider_mapview"), style: .plain, target: self, action: #selector(DriverRequestListController.showMapView))
+        mapViewBtn.tintColor = UIColor.black
 
-              
+        self.navigationItem.rightBarButtonItem = mapViewBtn
+
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
     }
     
 
     func refresh(){
-        routeRepo.fetchAllPickupRequests(self, tripStatus: status[tripStatusToggle.selectedSegmentIndex])
+        if let route = self.route {
+            routeRepo.fetchAllPickupRequests(self, tripStatus: status[tripStatusToggle.selectedSegmentIndex], route: route)
+
+        }
+        
+    }
+    
+    func showMapView(){
+        self.navigationController?.pushViewController(RiderMapClusterController(route: self.route!, riders: riders), animated: true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -96,13 +120,13 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         
         refresh()
         self.downloadGoogleMapsIfNeeded()
-       
+        
     }
 
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if let requests = pickupRequests {
+        if let requests = pickupRequestsByRoute {
             return requests.count
         }
         return 0
@@ -116,7 +140,7 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         cell.acceptBtn.layer.setValue((indexPath as NSIndexPath).row, forKey: "index")
         cell.acceptBtn.addTarget(self, action: #selector(DriverRequestListController.showDriverTripMode(_:)), for: .touchUpInside)
 
-        cell.trip = pickupRequests?[(indexPath as NSIndexPath).row]
+        cell.trip = pickupRequestsByRoute?[(indexPath as NSIndexPath).row]
  
         if tripStatusToggle.selectedSegmentIndex != 0 {
             cell.tripDisabledMode = true
@@ -141,17 +165,19 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         print("showing trip view")
         
         let row = sender.layer.value(forKey: "index") as! Int
-        let trip : Trip = pickupRequests![row]
+        let trip : Trip = pickupRequestsByRoute![row]
         
         trip.status = TripStatus.ACCEPTED
         trip.driver = PFUser.current()!
         trip.saveEventually()
         
         //TODO: Pass in the notification message from here not on the server
-        CloudFunctions.notifyUserAboutTrip(receiverId: trip.rider.user.objectId!, status: TripStatus.ACCEPTED.rawValue, message: "Driver is on his way")
+        CloudFunctions.notifyUserAboutTrip(receiverId: trip.rider.user.objectId!, status: TripStatus.ACCEPTED.rawValue, message: "The church bus is on its way now")
         self.navigationController?.setViewControllers([DriverTripViewController(trip: trip)], animated: true)
 
     }
+  
+    
     
     func downloadGoogleMapsIfNeeded(){
         if Helper.userHasGoogleMapsInstalled() == false {
@@ -173,6 +199,21 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
             self.navigationController?.present(alertController, animated: true, completion: nil)
             
         }
+        
+    }
+    
+    
+    // MARK- RouteRepoDelegate
+    func didFinishFetchingTripRequests(requests: [Trip]) {
+        self.pickupRequestsByRoute = requests
+        self.collectionView?.reloadData()
+        
+        for request in self.pickupRequestsByRoute! {
+            if request.status == TripStatus.REQUESTED {
+                self.riders.append(request.rider)
+            }
+        }
+        
         
     }
     
@@ -199,7 +240,9 @@ class PickupRequestCell : BaseCollectionCell {
         didSet {
             
             trip?.rider.user.fetchInBackground(block: { (user, error) in
-                self.nameLabel.text = ((user)!["name"] as? String)!
+                let firstname = ((user)!["firstname"] as? String)!
+                let surname = ((user)!["surname"] as? String)!
+                self.nameLabel.text = "\(firstname) \(surname)"
                 self.callButton.layer.setValue((user)!["contact"], forKey: "contact")
                 
                 if let extraRiders = self.trip?.extraRiders {
@@ -215,7 +258,6 @@ class PickupRequestCell : BaseCollectionCell {
             if let street = trip?.rider.addressDic["street"], let city = trip?.rider.addressDic["city"],  let postcode = trip?.rider.addressDic["postcode"]{
                 self.addressLabel.text = "\(street)\n\(city)\n\(postcode)"
 
-              
             }
 
             let dateString : String = Helper.convertDateToString((trip?.pickupTime)!)

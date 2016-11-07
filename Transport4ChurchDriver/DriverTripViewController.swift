@@ -13,6 +13,7 @@ import GoogleMaps
 class DriverTripViewController: UIViewController {
     
     var mapView : GMSMapView!
+    var locationManager = CLLocationManager()
 
     var currentTrip : Trip?
     var driverLocation : CLLocation!
@@ -36,9 +37,10 @@ class DriverTripViewController: UIViewController {
         mapView.isMyLocationEnabled = true
         mapView.settings.myLocationButton = true
         
+        
         view.addSubview(mapView)
         
-        title = currentTrip?.rider.user["name"] as! String
+        title = "\(currentTrip?.rider.user["firstname"] as! String) \(currentTrip?.rider.user["surname"] as! String)"
    
         let closeTripBtn =  UIBarButtonItem(image: UIImage(named: "close"), style: .plain, target: self, action: #selector(DriverTripViewController.closeActiveTrip))
         
@@ -55,6 +57,8 @@ class DriverTripViewController: UIViewController {
     func closeActiveTrip(){
         let alertController = UIAlertController (title: "Close Active Trip", message: "Please select an action you would like to take", preferredStyle: .alert )
         
+        let requestViewController = DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout())
+                
         let completeTripAction = UIAlertAction(title: "Complete pickup", style: .default) { (_) -> Void in
             self.currentTrip?.status = TripStatus.COMPLETED
             self.currentTrip?.saveEventually()
@@ -104,7 +108,7 @@ class DriverTripViewController: UIViewController {
         if let rider = currentTrip?.rider  {
             riderLocation.snippet = "\(rider.addressDic["street"]!) \(rider.addressDic["postcode"]!)"
 
-            riderLocation.title = rider.user["name"] as! String
+            riderLocation.title = "\(rider.user["firstname"] as! String) \(rider.user["surname"] as! String)"
         }
         
         riderLocation.isFlat = true
@@ -134,10 +138,11 @@ class DriverTripViewController: UIViewController {
     }
     
     func setDriverLocationOnMap(){
-        let manager = CLLocationManager()
-        manager.delegate = self
+        self.locationManager.delegate = self
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.startUpdatingLocation()
         
-        if let location = manager.location {
+        if let location = self.locationManager.location {
             let driverLatitude = location.coordinate.latitude
             let driverLongitude = location.coordinate.longitude
             
