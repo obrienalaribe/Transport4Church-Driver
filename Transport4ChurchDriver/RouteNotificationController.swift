@@ -12,7 +12,7 @@ class RouteNotificationController: UITableViewController {
 
     let notificationActions = [
         "Notify all riders who haven't booked their pickup request to do so on time",
-        "Notify riders on this route that you are starting your journey"
+        "Notify riders on this route that pickup has started"
     ]
     
     override func viewDidLoad() {
@@ -51,7 +51,6 @@ class RouteNotificationController: UITableViewController {
         cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
         return cell
     }
-
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100;

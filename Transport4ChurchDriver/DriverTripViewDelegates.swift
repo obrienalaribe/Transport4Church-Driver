@@ -34,6 +34,35 @@ extension DriverTripViewController : GMSMapViewDelegate{
     }
     
     
+    func riderDidCancelTrip(){
+        let alertController = UIAlertController (title: "Rider cancelled trip", message: "Please choose what action you would like to take", preferredStyle: .alert)
+        
+        let callRiderAction = UIAlertAction(title: "Call rider", style: .default) { (_) -> Void in
+            if let user = self.currentTrip?.rider.user{
+                
+                if let riderPhoneNum = user["contact"] {
+                    if let url = URL(string: "tel://\(riderPhoneNum)") {
+                        UIApplication.shared.openURL(url)
+                    }
+                }
+                self.navigationController?.setViewControllers([RoutesViewController(), DriverRequestListController(route: self.route!)], animated: true)
+            }
+            
+        }
+        
+        let confirmAction = UIAlertAction(title: "Okay", style: .default) { (_) -> Void in
+            self.navigationController?.setViewControllers([RoutesViewController(), DriverRequestListController(route: self.route!)], animated: true)
+        }
+        
+        alertController.addAction(callRiderAction)
+        alertController.addAction(confirmAction)
+        
+        present(alertController, animated: true, completion: nil)
+        
+
+
+    }
+    
 }
 
 

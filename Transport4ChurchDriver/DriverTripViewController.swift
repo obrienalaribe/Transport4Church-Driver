@@ -16,17 +16,24 @@ class DriverTripViewController: UIViewController {
     var locationManager = CLLocationManager()
 
     var currentTrip : Trip?
+    var route : Route?
     var driverLocation : CLLocation!
     
     var driverMockTimer : Timer!
 
-    init(trip: Trip){
+    init(trip: Trip, route: Route){
         self.currentTrip = trip
+        self.route = route
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        super.loadView()
+        NotificationCenter.default.addObserver(self, selector: #selector(DriverTripViewController.actOnTripUpdate(notification:)), name: NSNotification.Name(rawValue: Constants.NotificationNamespace.tripUpdate), object: nil)
     }
     
     override func viewDidLoad() {
@@ -56,30 +63,27 @@ class DriverTripViewController: UIViewController {
     
     func closeActiveTrip(){
         let alertController = UIAlertController (title: "Close Active Trip", message: "Please select an action you would like to take", preferredStyle: .alert )
-        
-        let requestViewController = DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout())
-                
+                        
         let completeTripAction = UIAlertAction(title: "Complete pickup", style: .default) { (_) -> Void in
             self.currentTrip?.status = TripStatus.COMPLETED
             self.currentTrip?.saveEventually()
-            self.navigationController?.setViewControllers([DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout())], animated: true)
+            self.navigationController?.setViewControllers([RoutesViewController(), DriverRequestListController(route: self.route!)], animated: true)
             
+            let userId = self.currentTrip?.rider.user.objectId!
+            CloudFunctions.notifyUserAboutTrip(receiverId: userId!, status: "complete", message: "Driver completed trip")
+        
         }
         
         let cancelTripAction = UIAlertAction(title: "Cancel pickup", style: .default) { (_) -> Void in
             self.currentTrip?.status = TripStatus.CANCELLED
             self.currentTrip?.saveEventually()
-            self.navigationController?.setViewControllers([DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout())], animated: true)
+            self.navigationController?.setViewControllers([RoutesViewController(), DriverRequestListController(route: self.route!)], animated: true)
             
             let userId = self.currentTrip?.rider.user.objectId!
-            
-            SocketIOManager.sharedInstance.sendTripStatusUpdate(toUser: userId!, status: "cancel")
-            
-            CloudFunctions.notifyUserAboutTrip(receiverId: userId!, status: "cancel", message: "Driver cancelled Trip")
+            CloudFunctions.notifyUserAboutTrip(receiverId: userId!, status: "cancel", message: "Driver cancelled trip")
         }
         
-        let continueAction = UIAlertAction(title: "Continue", style: .default, handler: nil)
-        
+        let continueAction = UIAlertAction(title: "Continue pickup", style: .default, handler: nil)
         
         alertController.addAction(completeTripAction)
         alertController.addAction(cancelTripAction)
@@ -186,6 +190,30 @@ class DriverTripViewController: UIViewController {
             print("location sent sucessefully ")
         }
         
+    }
+    
+    
+    /**
+     This function is an observer method that listens for trip updates from the rider
+     */
+    func actOnTripUpdate(notification: NSNotification){
+        
+        if let status = notification.userInfo?["status"] as? TripStatus, let alert = notification.userInfo?["alert"] as? String {
+            if status == TripStatus.CANCELLED {
+                Helper.showErrorMessage(title: nil, subtitle: alert)
+                self.riderDidCancelTrip()
+            }else if status == TripStatus.REQUESTED {
+                Helper.showSuccessMessage(title: nil, subtitle: alert)
+            }
+            else{
+                print("did not get status from trip Notification")
+            }
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        print("trip view stopped observing for trip updates")
     }
     
     

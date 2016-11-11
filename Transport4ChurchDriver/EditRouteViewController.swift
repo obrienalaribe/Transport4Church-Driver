@@ -62,8 +62,6 @@ class EditRouteViewController: FormViewController {
             route.church = church
             route.postcodes = postcodePrefix
             
-            print(postcodePrefix)
-            
             route.saveInBackground(block: { (success, error) in
                 self.navigationController?.popViewController(animated: true)
                 Helper.showSuccessMessage(title: "Success", subtitle: "Route \(routeName) was created successfully")

@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = UINavigationController(rootViewController:AuthViewController())
         }
         
-        
+        NotificationHelper.setupNotification()
         
 //        window?.rootViewController = UINavigationController(rootViewController:DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout()))
 
@@ -65,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     print("installation done: push notification registered with token \(deviceToken)")
                 }
             })
-        }
+        }                        
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -82,7 +82,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //            PFPush.handle(userInfo)
         }
         
-        print("RECEIVED REMOTE NOTIFICATION \(userInfo)")
+        if let aps = userInfo["aps"] as? [String:Any] {
+            if let alert = aps["alert"] as? String {
+                if alert.contains("cancelled"){
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: Constants.NotificationNamespace.tripUpdate), object: self, userInfo: ["status": TripStatus.CANCELLED, "alert": alert])
+                }else if alert.contains("new"){
+                     NotificationCenter.default.post(name: Notification.Name(rawValue: Constants.NotificationNamespace.tripUpdate), object: self, userInfo: ["status": TripStatus.REQUESTED, "alert": alert])
+                }
+            }
+        }
+        print("RECEIVED REMOTE NOTIFICATION")
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
@@ -98,6 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
+        SocketIOManager.sharedInstance.establishConnection()
         _ = ChurchRepo().fetchNearbyChurchesIfNeeded()
 
     }

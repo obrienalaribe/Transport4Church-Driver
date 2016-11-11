@@ -48,18 +48,26 @@ class RouteRepo {
                     
                     let pickupRequests = trips?.filter({ (trip) -> Bool in
                         if let rider =  trip["Rider"] as? Rider {
-                            let routePostcodes = route.postcodes
-                            let riderPostcodePrefix = rider.addressDic["postcode"]!.components(separatedBy: " ")[0]
+                            if let riderPostcode = rider.addressDic["postcode"] {
+                                let riderPostcodePrefix = riderPostcode.components(separatedBy: " ")[0]
+                                
+                                if let routePostcodes = route.postcodes {
+                                    return routePostcodes.contains(riderPostcodePrefix)
+                                }else{
+                                    print("YOOO!! POSTCODES FOR THIS ROUTE WERE \(route.postcodes)")
+                                    return false
+                                }
+
+                            }
                         
-                            return routePostcodes!.contains(riderPostcodePrefix)
+                            return false
+
                         }else{
                             return false
                         }
-                        
                     })
                     
                     print("Successfully fetched \(objects?.count) requests but returned filtered list of \(pickupRequests?.count).")
-
                     
                     self.delegate.didFinishFetchingTripRequests(requests: pickupRequests!)
                                 

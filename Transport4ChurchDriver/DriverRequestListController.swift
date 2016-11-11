@@ -65,6 +65,8 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         // Add this custom Segmented Control to our view
         self.view.addSubview(tripStatusToggle)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(DriverRequestListController.actOnTripUpdate(notification:)), name: NSNotification.Name(rawValue: Constants.NotificationNamespace.tripUpdate), object: nil)
+        
 
     }
     
@@ -119,6 +121,7 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         super.viewWillAppear(animated)
         
         refresh()
+        NotificationHelper.setupNotification()
         self.downloadGoogleMapsIfNeeded()
         
     }
@@ -173,11 +176,10 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         
         //TODO: Pass in the notification message from here not on the server
         CloudFunctions.notifyUserAboutTrip(receiverId: trip.rider.user.objectId!, status: TripStatus.ACCEPTED.rawValue, message: "The church bus is on its way now")
-        self.navigationController?.setViewControllers([DriverTripViewController(trip: trip)], animated: true)
+        self.navigationController?.setViewControllers([DriverTripViewController(trip: trip, route: self.route!)], animated: true)
 
     }
   
-    
     
     func downloadGoogleMapsIfNeeded(){
         if Helper.userHasGoogleMapsInstalled() == false {
@@ -214,8 +216,29 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
             }
         }
         
-        
     }
+    
+    /**
+     This function is an observer method that listens for new trips from the rider
+     */
+    func actOnTripUpdate(notification: NSNotification){
+        
+        if let status = notification.userInfo?["status"] as? TripStatus, let alert = notification.userInfo?["alert"] as? String {
+            if status == TripStatus.REQUESTED {
+                self.refresh()
+                Helper.showSuccessMessage(title: nil, subtitle: alert)
+            }
+            else{
+                print("did not get status from trip Notification")
+            }
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        print("request list view stopped observing for trip updates")
+    }
+    
     
 }
 

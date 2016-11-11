@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		045FB28E1DD28CBB0071300C /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045FB28D1DD28CBB0071300C /* NotificationHelper.swift */; };
 		434C2D331DC9F06E008ECCD5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434C2D321DC9F06E008ECCD5 /* AppDelegate.swift */; };
 		434C2D351DC9F06E008ECCD5 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434C2D341DC9F06E008ECCD5 /* RoutesViewController.swift */; };
 		434C2D3B1DC9F06E008ECCD5 /* Transport4ChurchDriver.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 434C2D391DC9F06E008ECCD5 /* Transport4ChurchDriver.xcdatamodeld */; };
@@ -43,6 +44,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		045FB28D1DD28CBB0071300C /* NotificationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
+		045FB28F1DD3BC880071300C /* Transport4ChurchDriver.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Transport4ChurchDriver.entitlements; sourceTree = "<group>"; };
 		33C9A8D3F4316C1E3ABBA9FE /* Pods-Transport4ChurchDriver.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Transport4ChurchDriver.release.xcconfig"; path = "Pods/Target Support Files/Pods-Transport4ChurchDriver/Pods-Transport4ChurchDriver.release.xcconfig"; sourceTree = "<group>"; };
 		434C2D2F1DC9F06E008ECCD5 /* Transport4ChurchDriver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Transport4ChurchDriver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		434C2D321DC9F06E008ECCD5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -116,6 +119,7 @@
 		434C2D311DC9F06E008ECCD5 /* Transport4ChurchDriver */ = {
 			isa = PBXGroup;
 			children = (
+				045FB28F1DD3BC880071300C /* Transport4ChurchDriver.entitlements */,
 				434C2D321DC9F06E008ECCD5 /* AppDelegate.swift */,
 				43DA6F251DD0D7F00035FB37 /* Requests */,
 				43DF82CB1DCCDD9B0048C6C2 /* Menu */,
@@ -170,6 +174,7 @@
 		434C2D721DCA3338008ECCD5 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				045FB28D1DD28CBB0071300C /* NotificationHelper.swift */,
 				43DF82C91DCCDD640048C6C2 /* UIViewExtension.swift */,
 				43DF82B31DCCA8540048C6C2 /* Constants.swift */,
 				434C2D731DCA3343008ECCD5 /* Helper.swift */,
@@ -183,8 +188,8 @@
 			isa = PBXGroup;
 			children = (
 				43DF82C01DCCD7A60048C6C2 /* DriverTripViewDelegates.swift */,
-				43DF82BC1DCCD6E20048C6C2 /* DriverRequestListController.swift */,
 				43DF82BE1DCCD79E0048C6C2 /* DriverTripViewController.swift */,
+				43DF82BC1DCCD6E20048C6C2 /* DriverRequestListController.swift */,
 				43DF82C21DCCD7AC0048C6C2 /* RiderMapClusterController.swift */,
 			);
 			name = Requests;
@@ -263,6 +268,14 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 7289W83XQQ;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -355,6 +368,7 @@
 				43DF82B91DCCD5550048C6C2 /* Rider.swift in Sources */,
 				43DF82C81DCCDCFD0048C6C2 /* SocketIOManager.swift in Sources */,
 				434C2D741DCA3343008ECCD5 /* Helper.swift in Sources */,
+				045FB28E1DD28CBB0071300C /* NotificationHelper.swift in Sources */,
 				434C2D4A1DCA035A008ECCD5 /* EditRouteViewController.swift in Sources */,
 				43DF82CD1DCCDDA40048C6C2 /* MenuViewController.swift in Sources */,
 				43DF82C31DCCD7AC0048C6C2 /* RiderMapClusterController.swift in Sources */,
@@ -494,11 +508,16 @@
 			baseConfigurationReference = E4C5E88E16B6410F3995A326 /* Pods-Transport4ChurchDriver.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Transport4ChurchDriver/Transport4ChurchDriver.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 7289W83XQQ;
 				INFOPLIST_FILE = Transport4ChurchDriver/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.rccg.Transport4ChurchDriver;
+				PRODUCT_BUNDLE_IDENTIFIER = org.rccg.TransportForChurchDriver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -508,10 +527,13 @@
 			baseConfigurationReference = 33C9A8D3F4316C1E3ABBA9FE /* Pods-Transport4ChurchDriver.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Transport4ChurchDriver/Transport4ChurchDriver.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 7289W83XQQ;
 				INFOPLIST_FILE = Transport4ChurchDriver/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.rccg.Transport4ChurchDriver;
+				PRODUCT_BUNDLE_IDENTIFIER = org.rccg.TransportForChurchDriver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

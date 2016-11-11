@@ -63,7 +63,7 @@ class Helper {
         }
     }
     
-    static func showErrorMessage(title: String, subtitle: String){
+    static func showErrorMessage(title: String?, subtitle: String){
         let banner = Banner(title: title, subtitle: subtitle, image: UIImage(named: "close"), backgroundColor: UIColor.white)
         banner.textColor = UIColor.red
         banner.dismissesOnTap = true
