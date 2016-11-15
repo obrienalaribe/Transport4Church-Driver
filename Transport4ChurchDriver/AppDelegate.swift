@@ -40,8 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = UINavigationController(rootViewController:AuthViewController())
         }
         
-        NotificationHelper.setupNotification()
-        
 //        window?.rootViewController = UINavigationController(rootViewController:DriverRequestListController(collectionViewLayout: UICollectionViewFlowLayout()))
 
         return true
@@ -53,9 +51,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let deviceInstallation = installation {
             deviceInstallation.setDeviceTokenFrom(deviceToken)
-            //register user on a channel with their ID
-            if let user = PFUser.current() {
-                deviceInstallation.channels = [user.objectId!]
+            //register user on a channel with their ID and CHURCH ID:Role
+            if let user = PFUser.current(), let church = ChurchRepo.getCurrentUserChurch() {
+                deviceInstallation.channels = [user.objectId!, "\(church.objectId!):Driver"]
             }
             
             deviceInstallation.saveInBackground(block: { (success, error) in
@@ -109,6 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         SocketIOManager.sharedInstance.establishConnection()
         _ = ChurchRepo().fetchNearbyChurchesIfNeeded()
+
 
     }
 

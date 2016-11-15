@@ -121,7 +121,7 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         super.viewWillAppear(animated)
         
         refresh()
-        NotificationHelper.setupNotification()
+
         self.downloadGoogleMapsIfNeeded()
         
     }

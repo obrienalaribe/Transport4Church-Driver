@@ -47,6 +47,19 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 
+        self.navigationController?.isToolbarHidden = false
+        
+      
+        let requestBookingsBtn = UIBarButtonItem(image: UIImage(named: "notify_request"), style: .done, target: self, action: #selector(RoutesViewController.actionForRequestingBookings))
+        requestBookingsBtn.tintColor = UIColor.black
+        
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        let items : [UIBarButtonItem] = [space, requestBookingsBtn, space]
+        
+        self.toolbarItems = items
+        
+
     }
     
     
@@ -55,10 +68,32 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         navigationController?.present(menuNavCtrl, animated: true, completion: nil)
     }
     
+    /// Notify all rider in this drivers church to make a pickup request
+    func actionForRequestingBookings(){
+        
+        let alertController = UIAlertController (title: "Rider Pickup Notification", message: "Are you sure you would like to notify all riders in your church to place a pickup request ?", preferredStyle: .alert )
+        
+        let confirmAction = UIAlertAction(title: "Yes, notify everyone", style: .default) { (_) -> Void in
+            let driverChurch = ChurchRepo.getCurrentUserChurch()
+            CloudFunctions.notifyUserAboutTrip(receiverId: "\(driverChurch!.objectId!):Rider", status: "new", message: "\(driverChurch!.name!) transport team is ready to receive your pickup request")
+            
+            print("Telling all riders to make bookings")
+        }
+
+        let ignoreAction = UIAlertAction(title: "No, dont notify", style: .default, handler: nil)
+        
+        alertController.addAction(confirmAction)
+        alertController.addAction(ignoreAction)
+        
+        present(alertController, animated: true, completion: nil)
+
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        NotificationHelper.setupNotification()
         let churchRepo = ChurchRepo()
         churchRepo.delegate = self
         
@@ -148,7 +183,7 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
     // MARK: Cell Actions
     
     func notifyRiders(){
-         self.navigationController?.pushViewController(RouteNotificationController(), animated: true)
+         print("perform a query and get all riders under this route with a booking")
     }
     
     func deleteRoute(){
