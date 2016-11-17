@@ -89,5 +89,5 @@ class Helper {
             return "\(postcode.components(separatedBy: "-")[0].trimmingCharacters(in: CharacterSet.whitespacesAndNewlines))"
         }
     }
-
+    
 }

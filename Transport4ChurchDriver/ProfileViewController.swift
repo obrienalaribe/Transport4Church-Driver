@@ -158,6 +158,8 @@ class ProfileViewController : UIViewController {
     func setupChurchLabel(_ parentMargin : UILayoutGuide){
         if let church = ChurchRepo.getCurrentUserChurch() {
             churchLabel = createProfileLabel("Church: \(church.name!) \n")
+        }else{
+            churchLabel = createProfileLabel("Church:")
         }
         
         churchLabel.numberOfLines = 3

@@ -38,7 +38,6 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         navigationItem.title = self.route!.name
         routeRepo.delegate = self
     }
-
     
     let items = ["New", "Completed", "Cancelled"]
     let status = [TripStatus.REQUESTED, TripStatus.COMPLETED, TripStatus.CANCELLED]
@@ -175,7 +174,9 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
         trip.saveEventually()
         
         //TODO: Pass in the notification message from here not on the server
-        CloudFunctions.notifyUserAboutTrip(receiverId: trip.rider.user.objectId!, status: TripStatus.ACCEPTED.rawValue, message: "The church bus is on its way now")
+        let user = UserRepo().getCurrentUser()!
+        let fullname = "\(user["firstname"]!) \(user["surname"]!)"
+        CloudFunctions.notifyUserAboutTrip(receiverId: trip.rider.user.objectId!, status: TripStatus.ACCEPTED.rawValue, message: "\(fullname) is coming to pick you up now")
         self.navigationController?.setViewControllers([DriverTripViewController(trip: trip, route: self.route!)], animated: true)
 
     }

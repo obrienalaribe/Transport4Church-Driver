@@ -10,27 +10,32 @@ import Parse
 
 protocol ChurchRepoDelegate {
     func didFinishFetchingRoutes(routes: [Route])
+    func didDeleteRoute()
 }
 
 class ChurchRepo {
     
     var delegate : ChurchRepoDelegate!
     
-    static var churchNames = [String]()
+    //TODO: Need to create an ordered Set of names to avoid duplicates in records
+    static var churchNames = Set<String>()
     static var churchCacheById = Dictionary<String, Church>()
     static var churchCacheByName = Dictionary<String, Church>()
+    
+    static var postcodesCoveredByChurch = Set<String>()
     
     func fetchNearbyChurchesIfNeeded() {
         if (ChurchRepo.churchNames.isEmpty && ChurchRepo.churchCacheById.isEmpty) {
             let query = PFQuery(className: Church.parseClassName())
             query.findObjectsInBackground { (results, error) in
                 if let churches = results as? [Church] {
-                    print("Caching churches ...")
                     for church in churches {
-                        ChurchRepo.churchNames.append(church.name!)
+                        ChurchRepo.churchNames.insert(church.name!)
                         ChurchRepo.churchCacheById[church.objectId!] = church
                         ChurchRepo.churchCacheByName[church.name!] = church
                     }
+                    print("Finished caching churches \(ChurchRepo.churchCacheById.count)")
+
                 }
             }
             
@@ -56,9 +61,13 @@ class ChurchRepo {
                 // The find succeeded.
                 print("Successfully fetched \(objects?.count) routes.")
                 
-                for  object in objects! {
+                for object in objects! {
                     let route = object as! Route
                     churchRoutes.append(route)
+                    //Cache all church postcodes
+                    for postcode in route.postcodes! {
+                        ChurchRepo.postcodesCoveredByChurch.insert(postcode)
+                    }
                 }
                 self.delegate.didFinishFetchingRoutes(routes: churchRoutes )
 
@@ -76,12 +85,33 @@ class ChurchRepo {
             if let church = ChurchRepo.churchCacheById[ churchObject.objectId!] {
                 return church
             }else{
-                print("Cache does not have user church")
-                print(churchObject)
+                print("Cache does not have user church so return current user church")
                 return churchObject
             }
         }
         return nil
+    }
+    
+    static func getPostcodesWithoutRoutes() -> Array<String> {
+        var setOfAllPostcodes = Set(Helper.parsePostcodePrefix(postcodes:RouteRepo.leedsPostcodes))
+        let setOfCoveredPostcodes = ChurchRepo.postcodesCoveredByChurch
+        
+        let setOfUncoveredPostcodes = setOfAllPostcodes.symmetricDifference(setOfCoveredPostcodes)
+        
+//        print("set of all postcodes: \(setOfAllPostcodes)")
+//        print("covered by church: \(ChurchRepo.postcodesCoveredByChurch)")
+        print("uncovered postcodes: \(setOfUncoveredPostcodes)")
+
+        return (Array(setOfUncoveredPostcodes))
+    }
+    
+    
+    func delete(route: Route) {
+        route.deleteInBackground { (success, error) in
+            if error == nil {
+                self.delegate.didDeleteRoute()
+            }
+        }
     }
     
 }

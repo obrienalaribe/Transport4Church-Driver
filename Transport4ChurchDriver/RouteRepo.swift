@@ -50,9 +50,13 @@ class RouteRepo {
                         if let rider =  trip["Rider"] as? Rider {
                             if let riderPostcode = rider.addressDic["postcode"] {
                                 let riderPostcodePrefix = riderPostcode.components(separatedBy: " ")[0]
-                                
+
                                 if let routePostcodes = route.postcodes {
-                                    return routePostcodes.contains(riderPostcodePrefix)
+                                    if routePostcodes.contains(riderPostcodePrefix) {
+                                        return true
+                                    }else{
+                                        return false
+                                    }
                                 }else{
                                     print("YOOO!! POSTCODES FOR THIS ROUTE WERE \(route.postcodes)")
                                     return false
@@ -67,10 +71,10 @@ class RouteRepo {
                         }
                     })
                     
-                    print("Successfully fetched \(objects?.count) requests but returned filtered list of \(pickupRequests?.count).")
+                    print("Successfully fetched \(objects?.count) filtered requests are \(pickupRequests?.count) ")
                     
                     self.delegate.didFinishFetchingTripRequests(requests: pickupRequests!)
-                                
+                    
                 } else {
                     // Log details of the failure
                     print("Error: \(error!)")
@@ -81,8 +85,7 @@ class RouteRepo {
         
 
         }
-    
-    
+   
     static let leedsPostcodes = [
         "LS1 - Leeds city centre",
         "LS2 - City centre, Woodhouse",
@@ -114,5 +117,7 @@ class RouteRepo {
         "LS28 - Calverley, Farsley, Pudsey, Stanningley",
         "LS29 - Addingham, Ben Rhydding, Burley in Wharfedale, Ilkley, Menston"
     ]
+    
+   
     
 }

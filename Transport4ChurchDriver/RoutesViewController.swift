@@ -11,13 +11,13 @@ import MGSwipeTableCell
 
 class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, ChurchRepoDelegate {
     var routes = [Route]()
-
+    let churchRepo = ChurchRepo()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Bus Routes"
         self.tableView.separatorStyle = .singleLine
-        
         
         view.backgroundColor = UIColor(white: 0.95, alpha: 1)
         tableView.backgroundColor = UIColor(white: 0.95, alpha: 1)
@@ -47,19 +47,6 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
 
-        self.navigationController?.isToolbarHidden = false
-        
-      
-        let requestBookingsBtn = UIBarButtonItem(image: UIImage(named: "notify_request"), style: .done, target: self, action: #selector(RoutesViewController.actionForRequestingBookings))
-        requestBookingsBtn.tintColor = UIColor.black
-        
-        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        
-        let items : [UIBarButtonItem] = [space, requestBookingsBtn, space]
-        
-        self.toolbarItems = items
-        
-
     }
     
     
@@ -77,7 +64,6 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
             let driverChurch = ChurchRepo.getCurrentUserChurch()
             CloudFunctions.notifyUserAboutTrip(receiverId: "\(driverChurch!.objectId!):Rider", status: "new", message: "\(driverChurch!.name!) transport team is ready to receive your pickup request")
             
-            print("Telling all riders to make bookings")
         }
 
         let ignoreAction = UIAlertAction(title: "No, dont notify", style: .default, handler: nil)
@@ -94,12 +80,21 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         super.viewWillAppear(animated)
         
         NotificationHelper.setupNotification()
-        let churchRepo = ChurchRepo()
-        churchRepo.delegate = self
         
-        if let driversChurch = ChurchRepo.getCurrentUserChurch() {
-            churchRepo.fetchAllRoutes(for: driversChurch)
-        }
+        churchRepo.delegate = self
+        refresh()
+        
+        //Setup toobar
+        self.navigationController?.isToolbarHidden = false
+        
+        let requestBookingsBtn = UIBarButtonItem(image: UIImage(named: "notify_request"), style: .done, target: self, action: #selector(RoutesViewController.actionForRequestingBookings))
+        requestBookingsBtn.tintColor = UIColor.black
+        
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        
+        let items : [UIBarButtonItem] = [space, requestBookingsBtn, space]
+        
+        self.toolbarItems = items
 
     }
     
@@ -108,6 +103,12 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         return routes.count;
     }
 
+    func refresh(){
+        if let driversChurch = ChurchRepo.getCurrentUserChurch() {
+            churchRepo.fetchAllRoutes(for: driversChurch)
+        }
+
+    }
 
     func addNewRoute(){
 
@@ -129,32 +130,39 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         cell.imageView?.layer.masksToBounds = true
         cell.imageView?.backgroundColor = UIColor(white: 0.95, alpha: 1)
         
+        //set route and index for each cell
+        cell.layer.setValue(self.routes[indexPath.row], forKey: "route")
+        cell.layer.setValue(indexPath, forKey: "index")
+        
         //configure left buttons
-
         cell.leftButtons = [MGSwipeButton(title: " Notify riders", icon: UIImage(named:"notify"), backgroundColor: UIColor(red:0.03, green:0.79, blue:0.49, alpha:1.0), callback: { (cell) -> Bool in
-           self.notifyRiders()
+            self.notifyRiders()
             return true; //autohide
         })]
         
         cell.leftSwipeSettings.transition = MGSwipeTransition.rotate3D
+
         
-//        configure right buttons
-        
-      
-        cell.rightButtons = [  MGSwipeButton(title: "Delete", backgroundColor: UIColor.red, callback: { (cell) -> Bool in
-            self.deleteRoute()
-            return true; //autohide
-        })
-        , MGSwipeButton(title: "Edit", backgroundColor: UIColor.lightGray, callback: { (cell) -> Bool in
-            self.editRoute()
-            return true; //autohide
-        })
-        ]
-        cell.rightSwipeSettings.transition = MGSwipeTransition.rotate3D
-//
+        if indexPath.row != routes.count-1 {
+            
+            //configure right buttons
+            
+            cell.rightButtons = [  MGSwipeButton(title: "Delete", backgroundColor: UIColor.red, callback: { (cell) -> Bool in
+                
+                self.deleteRoute(route: cell?.layer.value(forKey: "route") as! Route, indexPath: cell?.layer.value(forKey: "index") as! IndexPath)
+                return true;
+            })
+                , MGSwipeButton(title: "Edit", backgroundColor: UIColor.lightGray, callback: { (cell) -> Bool in
+                    self.editRoute()
+                    return true; //autohide
+                })
+            ]
+            cell.rightSwipeSettings.transition = MGSwipeTransition.rotate3D
+
+        }
         
         cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-        
+
         return cell
     }
     
@@ -172,13 +180,24 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
     func didFinishFetchingRoutes(routes: [Route]){
         // The number of routes has been updated
         
-        print("self.routes.count != routes.count = \(self.routes.count) \(routes.count )")
-        if self.routes.count != routes.count {
-            self.routes = routes
-            self.tableView.reloadData()
+        self.routes = routes
+        //create default route for requests without a route
+        if let driversChurch = ChurchRepo.getCurrentUserChurch() {
+            let unknownRoute = Route()
+            unknownRoute.name = "Requests without a postcode route"
+            unknownRoute.church = driversChurch
+            unknownRoute.postcodes = ChurchRepo.getPostcodesWithoutRoutes()            
+            self.routes.append(unknownRoute)
         }
-        
+       
+        self.tableView.reloadData()
+    
     }
+    
+    func didDeleteRoute(){
+        refresh()
+    }
+    
     
     // MARK: Cell Actions
     
@@ -186,12 +205,24 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
          print("perform a query and get all riders under this route with a booking")
     }
     
-    func deleteRoute(){
-        print("deleting route ...")
+    func deleteRoute(route: Route, indexPath: IndexPath) {
+        if routes.last != route {
+            //YOU NEED TO ADD THIS ROUTE POSTCODE BACK TO UNCOVERED POSTCODE CACHE
+            churchRepo.delete(route: route)
+            routes.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+        }
+        
     }
     
     func editRoute(){
         print("edit route")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.isToolbarHidden = true
+     
     }
     
 }

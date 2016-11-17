@@ -67,7 +67,7 @@ class EditProfileViewController : FormViewController {
             <<< PushRow<String>("Church") {
                 $0.title = "Church"
                 $0.selectorTitle = "Nearby Churches"
-                $0.options = ChurchRepo.churchNames
+                $0.options = Array(ChurchRepo.churchNames)
                 $0.value = userChurch?.name
             }
             

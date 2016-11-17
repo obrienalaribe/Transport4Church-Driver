@@ -36,7 +36,7 @@ class ParseServer {
         })
         
         Parse.initialize(with: parseConfiguration)
-        
+//        initializeChurches()
 //                PFUser.logOut()
     }
     
