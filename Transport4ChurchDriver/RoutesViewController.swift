@@ -152,7 +152,7 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
                 return true;
             })
                 , MGSwipeButton(title: "Edit", backgroundColor: UIColor.lightGray, callback: { (cell) -> Bool in
-                    self.editRoute()
+                    self.editRoute(route: cell?.layer.value(forKey: "route") as! Route)
                     return true; //autohide
                 })
             ]
@@ -183,7 +183,7 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         //create default route for requests without a route
         if let driversChurch = ChurchRepo.getCurrentUserChurch() {
             let unknownRoute = Route()
-            unknownRoute.name = "Requests without a postcode route"
+            unknownRoute.name = "Riders without a postcode route"
             unknownRoute.church = driversChurch
             unknownRoute.postcodes = ChurchRepo.getPostcodesWithoutRoutes()            
             self.routes.append(unknownRoute)
@@ -214,9 +214,14 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         
     }
     
-    func editRoute(){
-        print("edit route")
-        self.navigationController?.pushViewController(EditRouteViewController(), animated: true)
+    func editRoute(route: Route){
+        if let routeName = route.name {
+            let viewController = EditRouteViewController()
+            viewController.route = route
+            viewController.action = "Edit \(routeName)"
+            self.navigationController?.pushViewController(viewController, animated: true)
+ 
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

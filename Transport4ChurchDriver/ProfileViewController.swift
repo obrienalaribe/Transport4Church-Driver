@@ -235,6 +235,7 @@ class ProfileViewController : UIViewController {
         let confirmAction = UIAlertAction(title: "Yes, logout", style: .default) { (_) -> Void in
             PFUser.logOut()
             self.navigationController?.setViewControllers([AuthViewController()], animated: true)
+            //TODO: User channel needs to be removed and reset to new login user
             
         }
         
