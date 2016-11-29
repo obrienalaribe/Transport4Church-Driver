@@ -16,13 +16,22 @@ class EditRouteViewController: FormViewController {
         }
     }
 
+    var route: Route?
+    
+    convenience init(route: Route) {
+        self.init()
+        self.route = route
+        title = "Edit route"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+         
         form +++ Section("Enter a name for this route")
             <<< TextRow("Route"){
                 $0.title = "Route name"
                 $0.placeholder = "i.e University entrance"
+                $0.value = extractRouteField(field: route?.name)
             }
            
             +++ Section("Choose all postcodes for this route")
@@ -68,6 +77,13 @@ class EditRouteViewController: FormViewController {
             })
         }
         
+    }
+    
+    func extractRouteField(field: String?) -> String {
+        if let fieldValue = field {
+            return fieldValue as! String
+        }
+        return ""
     }
     
 }

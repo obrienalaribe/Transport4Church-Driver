@@ -230,8 +230,21 @@ class ProfileViewController : UIViewController {
     }
 
     func logout(){
-        PFUser.logOut()
-        self.navigationController?.setViewControllers([AuthViewController()], animated: true)
+        let alertController = UIAlertController (title: "Logout", message: "Are you sure you would like to logout from this account ?", preferredStyle: .alert )
+        
+        let confirmAction = UIAlertAction(title: "Yes, logout", style: .default) { (_) -> Void in
+            PFUser.logOut()
+            self.navigationController?.setViewControllers([AuthViewController()], animated: true)
+            
+        }
+        
+        let ignoreAction = UIAlertAction(title: "No", style: .default, handler: nil)
+        
+        alertController.addAction(confirmAction)
+        alertController.addAction(ignoreAction)
+        
+        present(alertController, animated: true, completion: nil)
+
     }
     
     fileprivate func createProfileLabel(_ title : String) -> UILabel{

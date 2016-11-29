@@ -114,7 +114,6 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
 
         let viewController = EditRouteViewController()
         viewController.action = "New Route"
-        
         self.navigationController?.pushViewController(viewController, animated: true)
 
     }
@@ -217,6 +216,7 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
     
     func editRoute(){
         print("edit route")
+        self.navigationController?.pushViewController(EditRouteViewController(), animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

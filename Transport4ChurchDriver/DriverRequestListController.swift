@@ -106,7 +106,7 @@ class DriverRequestListController: UICollectionViewController, UICollectionViewD
 
     func refresh(){
         if let route = self.route {
-            routeRepo.fetchAllPickupRequests(self, tripStatus: status[tripStatusToggle.selectedSegmentIndex], route: route)
+            routeRepo.fetchAllPickupRequests(tripStatus: status[tripStatusToggle.selectedSegmentIndex], route: route)
 
         }
         

@@ -16,76 +16,82 @@ class RouteRepo {
     
     var delegate : RouteRepoDelegate!
     
-    func fetchAllPickupRequests(_ view : DriverRequestListController, tripStatus: TripStatus, route: Route){
+    func fetchAllPickupRequests(tripStatus: TripStatus, route: Route){
         
-        if let driversChurch = ChurchRepo.getCurrentUserChurch() {
-            let today = Date()
-            let cal = Calendar(identifier: .gregorian)
-            let startOfToday = cal.startOfDay(for: today)
+        let query = queryForRequest(tripStatus: tripStatus)
+        
+        query.findObjectsInBackground {
+            (objects: [PFObject]?, error: Error?) -> Void in
             
-            let yesterday = Calendar.current
-                .date(byAdding: .day, value: -1, to: today)
-            let startOfYesterday = cal.startOfDay(for: yesterday!)
+            if error == nil {
+                let trips = objects as? [Trip]
+                
+                let pickupRequests = trips?.filter({ (trip) -> Bool in
+                    if let rider =  trip["Rider"] as? Rider {
+                        if let riderPostcode = rider.addressDic["postcode"] {
+                            let riderPostcodePrefix = riderPostcode.components(separatedBy: " ")[0]
+                            
+                            if let routePostcodes = route.postcodes {
+                                if routePostcodes.contains(riderPostcodePrefix) {
+                                    return true
+                                }else{
+                                    return false
+                                }
+                            }else{
+                                print("YOOO!! POSTCODES FOR THIS ROUTE WERE \(route.postcodes)")
+                                return false
+                            }
+                            
+                        }
+                        
+                        return false
+                        
+                    }else{
+                        return false
+                    }
+                })
+                
+                print("Successfully fetched \(objects?.count) filtered requests are \(pickupRequests?.count) ")
+                
+                self.delegate.didFinishFetchingTripRequests(requests: pickupRequests!)
+                
+            } else {
+                // Log details of the failure
+                print("Error: \(error!)")
+            }
+        }
+   
+        
+    }
+   
+    private func queryForRequest(tripStatus : TripStatus) -> PFQuery<PFObject> {
+        let today = Date()
+        let cal = Calendar(identifier: .gregorian)
+        
+        let yesterday = Calendar.current
+            .date(byAdding: .day, value: -1, to: today)
+        let startOfYesterday = cal.startOfDay(for: yesterday!)
+        
+        let tmrw = Calendar.current
+            .date(byAdding: .day, value: 1, to: today)
+        let startOfTmrw = cal.startOfDay(for: tmrw!)
 
-            let tmrw = Calendar.current
-                .date(byAdding: .day, value: 1, to: today)
-            let startOfTmrw = cal.startOfDay(for: tmrw!)
+        let query = PFQuery(className:Trip.parseClassName())
 
-            let query = PFQuery(className:Trip.parseClassName())
+        if let driversChurch = ChurchRepo.getCurrentUserChurch() {
             query.whereKey("destination", equalTo: driversChurch)
             query.whereKey("status", equalTo: tripStatus.rawValue)
             query.whereKey("pickupTime", greaterThanOrEqualTo: startOfYesterday)
             query.whereKey("pickupTime", lessThanOrEqualTo: startOfTmrw)
             query.includeKey("Rider")
             query.addAscendingOrder("pickupTime")
-            query.limit = 100
-            
-            query.findObjectsInBackground {
-                (objects: [PFObject]?, error: Error?) -> Void in
-                
-                if error == nil {
-                    let trips = objects as? [Trip]
-                    
-                    let pickupRequests = trips?.filter({ (trip) -> Bool in
-                        if let rider =  trip["Rider"] as? Rider {
-                            if let riderPostcode = rider.addressDic["postcode"] {
-                                let riderPostcodePrefix = riderPostcode.components(separatedBy: " ")[0]
 
-                                if let routePostcodes = route.postcodes {
-                                    if routePostcodes.contains(riderPostcodePrefix) {
-                                        return true
-                                    }else{
-                                        return false
-                                    }
-                                }else{
-                                    print("YOOO!! POSTCODES FOR THIS ROUTE WERE \(route.postcodes)")
-                                    return false
-                                }
-
-                            }
-                        
-                            return false
-
-                        }else{
-                            return false
-                        }
-                    })
-                    
-                    print("Successfully fetched \(objects?.count) filtered requests are \(pickupRequests?.count) ")
-                    
-                    self.delegate.didFinishFetchingTripRequests(requests: pickupRequests!)
-                    
-                } else {
-                    // Log details of the failure
-                    print("Error: \(error!)")
-                }
-            }
-            
         }
         
-
-        }
-   
+        return query
+    }
+    
+    
     static let leedsPostcodes = [
         "LS1 - Leeds city centre",
         "LS2 - City centre, Woodhouse",
@@ -118,6 +124,5 @@ class RouteRepo {
         "LS29 - Addingham, Ben Rhydding, Burley in Wharfedale, Ilkley, Menston"
     ]
     
-   
     
 }

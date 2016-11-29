@@ -108,7 +108,9 @@ class MenuViewController: UITableViewController {
         if section == 0 {
             return userSection.count
         } else if section == 1 {
-            return enquirySection.count
+//            return enquirySection.count
+            return 0
+
         } else {
             return 0
         }
