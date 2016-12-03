@@ -100,7 +100,7 @@ class ChurchRepo {
         
 //        print("set of all postcodes: \(setOfAllPostcodes)")
 //        print("covered by church: \(ChurchRepo.postcodesCoveredByChurch)")
-        print("uncovered postcodes: \(setOfUncoveredPostcodes)")
+//        print("uncovered postcodes: \(setOfUncoveredPostcodes)")
 
         return (Array(setOfUncoveredPostcodes))
     }

@@ -18,12 +18,6 @@ class EditRouteViewController: FormViewController {
 
     var route: Route?
     
-    convenience init(route: Route) {
-        self.init()
-        self.route = route
-        title = "Edit route"
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
          
@@ -31,7 +25,7 @@ class EditRouteViewController: FormViewController {
             <<< TextRow("Route"){
                 $0.title = "Route name"
                 $0.placeholder = "i.e University entrance"
-                $0.value = extractRouteField(field: route?.name)
+                $0.value = route?.name
             }
            
             +++ Section("Choose all postcodes for this route")
@@ -39,7 +33,7 @@ class EditRouteViewController: FormViewController {
                 $0.title = "Postcodes"
                 $0.selectorTitle = "Choose postcodes for this route"
                 $0.options = RouteRepo.leedsPostcodes
-                $0.value = []   // initially selected
+                $0.value = getPostcodes()
             }
             
             +++ Section() { section in
@@ -64,26 +58,41 @@ class EditRouteViewController: FormViewController {
             
         }
         
-        let route = Route()
         
         if let routeName = valuesDictionary["Route"] as? String, let church = ChurchRepo.getCurrentUserChurch() {
-            route.name = routeName.trim()
-            route.church = church
-            route.postcodes = postcodePrefix
-            
-            route.saveInBackground(block: { (success, error) in
-                self.navigationController?.popViewController(animated: true)
-                Helper.showSuccessMessage(title: "Success", subtitle: "Route \(routeName) was created successfully")
-            })
+            if let route = self.route {
+                //edit existing route
+                route.name = routeName
+                route.postcodes = postcodePrefix
+                route.saveInBackground(block: { (success, error) in
+                    self.navigationController?.popViewController(animated: true)
+                    Helper.showSuccessMessage(title: "Success", subtitle: "Route \(routeName) was updated successfully")
+                })
+                
+            }else{
+                //create new route
+                let route = Route()
+                route.name = routeName.trim()
+                route.church = church
+                route.postcodes = postcodePrefix
+                
+                route.saveInBackground(block: { (success, error) in
+                    self.navigationController?.popViewController(animated: true)
+                    Helper.showSuccessMessage(title: "Success", subtitle: "Route \(routeName) was created successfully")
+                })
+            }
         }
-        
+    
+       
     }
     
-    func extractRouteField(field: String?) -> String {
-        if let fieldValue = field {
-            return fieldValue as! String
+    func getPostcodes() -> Set<String> {
+        if let route = self.route {
+            if let postcodes = route.postcodes {
+                return Set(postcodes)
+            }
         }
-        return ""
+        return Set()
     }
     
 }
