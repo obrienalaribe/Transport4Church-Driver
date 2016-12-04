@@ -62,7 +62,7 @@ class EditRouteViewController: FormViewController {
         if let routeName = valuesDictionary["Route"] as? String, let church = ChurchRepo.getCurrentUserChurch() {
             if let route = self.route {
                 //edit existing route
-                route.name = routeName
+                route.name = routeName.trim()
                 route.postcodes = postcodePrefix
                 route.saveInBackground(block: { (success, error) in
                     self.navigationController?.popViewController(animated: true)

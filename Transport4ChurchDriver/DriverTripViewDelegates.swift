@@ -69,5 +69,36 @@ extension DriverTripViewController : GMSMapViewDelegate{
 // MARK: CLLocationManagerDelegate
 
 extension DriverTripViewController : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        
+        if (status == CLAuthorizationStatus.denied) {
+            // The user denied authorization
+            print("why did you decline ?")
+            
+            manager.requestWhenInUseAuthorization()
+            
+        } else if (status == CLAuthorizationStatus.authorizedAlways) {
+            // The user accepted authorization
+            print("thanks for accepting ")
+            
+        }
+    }
     
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+       
+        self.locationManager.delegate = self
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
+
+        if let driverLocation = locationManager.location {
+            
+            //send driver location through socket
+            SocketIOManager.sharedInstance.sendDriverLocation(driverLocation, to: self.currentTrip!.rider.user.objectId!) {
+                print("location sent sucessefully ")
+            }
+        }
+        
+    }
+    
+
 }

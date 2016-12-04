@@ -128,16 +128,16 @@ class DriverTripViewController: UIViewController {
  
         mapView.settings.myLocationButton = false
 
-        driverMockTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.sendDriverLocation), userInfo: nil, repeats: true)
+//        driverMockTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.sendDriverLocation), userInfo: nil, repeats: true)
         
     }
     
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        print("stopping location sending socket ...")
+//        print("stopping location sending socket ...")
         
-        driverMockTimer.invalidate()
+//        driverMockTimer.invalidate()
         
     }
     
@@ -168,7 +168,6 @@ class DriverTripViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        //start timer to emit driver location
         
     }
     
