@@ -134,11 +134,11 @@ class RoutesViewController: UITableViewController, MGSwipeTableCellDelegate, Chu
         cell.layer.setValue(indexPath, forKey: "index")
         
         //configure left buttons
-        cell.leftButtons = [MGSwipeButton(title: " Notify riders", icon: UIImage(named:"notify"), backgroundColor: UIColor(red:0.03, green:0.79, blue:0.49, alpha:1.0), callback: { (cell) -> Bool in
-            self.notifyRiders()
-            return true; //autohide
-        })]
-        
+//        cell.leftButtons = [MGSwipeButton(title: " Notify riders", icon: UIImage(named:"notify"), backgroundColor: UIColor(red:0.03, green:0.79, blue:0.49, alpha:1.0), callback: { (cell) -> Bool in
+//            self.notifyRiders()
+//            return true; //autohide
+//        })]
+//        
         cell.leftSwipeSettings.transition = MGSwipeTransition.rotate3D
 
         

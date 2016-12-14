@@ -69,5 +69,37 @@ extension DriverTripViewController : GMSMapViewDelegate{
 // MARK: CLLocationManagerDelegate
 
 extension DriverTripViewController : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        
+        if (status == CLAuthorizationStatus.denied) {
+            // The user denied authorization
+            print("why did you decline ?")
+            
+            manager.requestWhenInUseAuthorization()
+            
+        } else if (status == CLAuthorizationStatus.authorizedAlways) {
+            // The user accepted authorization
+            print("thanks for accepting ")
+            
+        }
+    }
     
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+       
+        if let driverLocation = locationManager.location {
+//            let driverCoordinates = CLLocationCoordinate2D(latitude: (driverLocation.coordinate.latitude), longitude: (driverLocation.coordinate.longitude))
+//            let bounds = GMSCoordinateBounds(coordinate: driverCoordinates, coordinate: riderLocation.position)
+//            let camera = mapView.camera(for: bounds, insets: UIEdgeInsets(top: 0, left: 50, bottom: 0, right: 50))!
+//            self.mapView.camera = camera
+
+            
+            //send driver location through socket
+            SocketIOManager.sharedInstance.sendDriverLocation(driverLocation, to: self.currentTrip!.rider.user.objectId!) {
+                print("location sent sucessefully ")
+            }
+        }
+        
+    }
+    
+
 }

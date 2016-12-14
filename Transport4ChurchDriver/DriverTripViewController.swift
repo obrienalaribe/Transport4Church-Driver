@@ -19,6 +19,8 @@ class DriverTripViewController: UIViewController {
     var route : Route?
     var driverLocation : CLLocation!
     
+    var riderLocation = GMSMarker()
+    
     var driverMockTimer : Timer!
 
     init(trip: Trip, route: Route){
@@ -42,8 +44,7 @@ class DriverTripViewController: UIViewController {
         mapView.mapType = kGMSTypeTerrain
         mapView.delegate = self
         mapView.isMyLocationEnabled = true
-        mapView.settings.myLocationButton = true
-        
+        mapView.settings.myLocationButton = true        
         
         view.addSubview(mapView)
         
@@ -107,10 +108,10 @@ class DriverTripViewController: UIViewController {
         
         let riderPosition = CLLocationCoordinate2D(latitude: (currentTrip?.rider.location.latitude)!, longitude: (currentTrip?.rider.location.longitude)!)
         
-        let riderLocation = GMSMarker(position: riderPosition)
+        riderLocation = GMSMarker(position: riderPosition)
         
         if let rider = currentTrip?.rider  {
-            riderLocation.snippet = "\(rider.addressDic["street"]!) \(rider.addressDic["postcode"]!)"
+//            riderLocation.snippet = "\(rider.addressDic["street"]!) \(rider.addressDic["postcode"]!)"
 
             riderLocation.title = "\(rider.user["firstname"] as! String) \(rider.user["surname"] as! String)"
         }
@@ -128,16 +129,16 @@ class DriverTripViewController: UIViewController {
  
         mapView.settings.myLocationButton = false
 
-        driverMockTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.sendDriverLocation), userInfo: nil, repeats: true)
+//        driverMockTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.sendDriverLocation), userInfo: nil, repeats: true)
         
     }
     
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        print("stopping location sending socket ...")
+//        print("stopping location sending socket ...")
         
-        driverMockTimer.invalidate()
+//        driverMockTimer.invalidate()
         
     }
     
@@ -152,7 +153,8 @@ class DriverTripViewController: UIViewController {
             
             driverLocation = CLLocation(latitude: driverLatitude, longitude: driverLongitude)
             
-            mapView.camera = GMSCameraPosition.camera(withLatitude: driverLatitude, longitude: driverLongitude, zoom: 14.0)
+            mapView.camera = GMSCameraPosition.camera(withLatitude: driverLatitude, longitude: driverLongitude, zoom: 8.0)
+
             
         }else{
             //mock driver location on simulator
@@ -168,7 +170,6 @@ class DriverTripViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        //start timer to emit driver location
         
     }
     
