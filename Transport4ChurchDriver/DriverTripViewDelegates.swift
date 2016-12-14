@@ -86,11 +86,12 @@ extension DriverTripViewController : CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
        
-        self.locationManager.delegate = self
-        self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.startUpdatingLocation()
-
         if let driverLocation = locationManager.location {
+//            let driverCoordinates = CLLocationCoordinate2D(latitude: (driverLocation.coordinate.latitude), longitude: (driverLocation.coordinate.longitude))
+//            let bounds = GMSCoordinateBounds(coordinate: driverCoordinates, coordinate: riderLocation.position)
+//            let camera = mapView.camera(for: bounds, insets: UIEdgeInsets(top: 0, left: 50, bottom: 0, right: 50))!
+//            self.mapView.camera = camera
+
             
             //send driver location through socket
             SocketIOManager.sharedInstance.sendDriverLocation(driverLocation, to: self.currentTrip!.rider.user.objectId!) {
