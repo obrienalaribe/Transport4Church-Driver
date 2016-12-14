@@ -75,7 +75,7 @@ extension DriverTripViewController : CLLocationManagerDelegate {
             // The user denied authorization
             print("why did you decline ?")
             
-            manager.requestWhenInUseAuthorization()
+            manager.requestAlwaysAuthorization()
             
         } else if (status == CLAuthorizationStatus.authorizedAlways) {
             // The user accepted authorization
@@ -86,18 +86,27 @@ extension DriverTripViewController : CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
        
-        if let driverLocation = locationManager.location {
-            //adjust zoom and bounds
-//            let driverCoordinates = CLLocationCoordinate2D(latitude: (driverLocation.coordinate.latitude), longitude: (driverLocation.coordinate.longitude))
-//            let bounds = GMSCoordinateBounds(coordinate: driverCoordinates, coordinate: riderLocation.position)
-//            let camera = mapView.camera(for: bounds, insets: UIEdgeInsets(top: 0, left: 50, bottom: 0, right: 50))!
-//            self.mapView.camera = camera
-
+        if let driverLocation = manager.location {
+             let riderLoc = CLLocation(latitude: self.currentTrip!.rider.location.latitude, longitude: self.currentTrip!.rider.location.longitude)
             
-            //send driver location through socket
-//            SocketIOManager.sharedInstance.sendDriverLocation(driverLocation, to: self.currentTrip!.rider.user.objectId!) {
-//                print("location sent sucessefully ")
-//            }
+            //Keep the rider marker in view while moving
+            var visibleRegion : GMSVisibleRegion = self.mapView.projection.visibleRegion()
+            let bounds = GMSCoordinateBounds(coordinate: visibleRegion.nearLeft, coordinate: visibleRegion.farRight)
+            
+            if bounds.contains(riderLoc.coordinate) == false {
+                print("you need to update the map view now")
+                let camera = mapView.camera(for: bounds, insets: UIEdgeInsets(top: 20, left: 80, bottom: 20, right: 80))!
+                self.mapView.camera = camera
+                
+            }
+            
+            if currentTrip?.status == TripStatus.ACCEPTED {
+                //send driver location through socket
+                SocketIOManager.sharedInstance.sendDriverLocation(driverLocation, to: self.currentTrip!.rider.user.objectId!) {
+                    print("location sent ")
+                }
+            }
+           
         }
         
     }

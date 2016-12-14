@@ -138,7 +138,7 @@ class DriverTripViewController: UIViewController {
         super.viewWillDisappear(animated)
         print("stopping location sending socket ...")
         
-        driverMockTimer.invalidate()
+//        driverMockTimer.invalidate()
         
     }
     
@@ -185,11 +185,12 @@ class DriverTripViewController: UIViewController {
         let distanceInMeters = riderLoc.distance(from: driverLocation)
         let distanceInMiles = distanceInMeters/1609.344
         let distanceString = String(format: "%.1f miles away from you", distanceInMiles)
+ 
         
-        //send driver location through socket
-        SocketIOManager.sharedInstance.sendDriverLocation(driverLocation, to: self.currentTrip!.rider.user.objectId!) {
-            print("location sent sucessefully ")
-        }
+        //MOCK DRIVER TRIP
+//        SocketIOManager.sharedInstance.sendDriverLocation(driverLocation, to: self.currentTrip!.rider.user.objectId!) {
+//            print("location sent sucessefully ")
+//        }
         
     }
     
